@@ -1,9 +1,7 @@
 const STYLES: Record<string, string> = {
-  high: "bg-red-100 text-red-800 border-red-300 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
-  medium:
-    "bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
-  needs_review:
-    "bg-zinc-100 text-zinc-700 border-zinc-300 dark:bg-zinc-900 dark:text-zinc-300 dark:border-zinc-700",
+  high: "bg-red-100 text-red-800 border-red-300",
+  medium: "bg-amber-100 text-amber-800 border-amber-300",
+  needs_review: "bg-zinc-100 text-zinc-700 border-zinc-300",
 };
 
 const DOT_STYLES: Record<string, string> = {

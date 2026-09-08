@@ -109,9 +109,3 @@ Visit `http://localhost:3000` — **Voice Agent**, **Manual Add**, and
 - `app/page.tsx` — Voice Agent view. `app/add/page.tsx` — Manual Add.
   `app/dashboard/page.tsx` — Live Dashboard.
 
-## Notes
-
-- This project's `.git` repository root turned out to be the whole
-  `C:\Users\DEII` home directory, not this project folder — it was left
-  untouched. Worth sorting out separately (either `git init` a proper repo
-  here, or fix the home-directory one) before committing this project.

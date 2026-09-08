@@ -43,10 +43,11 @@ npx convex env set RESEND_API_KEY re_...
 npx convex env set RECALL_RADAR_ADMIN_EMAIL you@example.com
 npx convex env set RECALL_RADAR_FROM_EMAIL "Recall Radar <onboarding@resend.dev>"
 npx convex env set RECALL_RADAR_APP_URL http://localhost:3000
+npx convex env set GROQ_API_KEY gsk_...
 ```
 
-Both `enrichFlag` and `notifyTeam` fail soft (log + skip) if their API key
-isn't set, so the rest of the app keeps working without them.
+`enrichFlag`, `notifyTeam`, and `summarizeFlag` all fail soft (log + skip) if
+their API key isn't set, so the rest of the app keeps working without them.
 
 ### 4. Configure the ElevenLabs agent
 
@@ -103,8 +104,9 @@ Visit `http://localhost:3000` — **Voice Agent**, **Manual Add**, and
   dashboard).
 - `convex/products.ts`, `convex/match.ts`, `convex/flags.ts` — the core
   `addProduct` / `matchProduct` / `flagProduct` / `getDashboard` functions.
-- `convex/enrich.ts`, `convex/notify.ts` — Context.dev enrichment and Resend
-  notification actions, scheduled from `flagProduct`.
+- `convex/enrich.ts`, `convex/notify.ts`, `convex/summarize.ts` — Context.dev
+  enrichment, Resend notification, and Groq AI-summary actions, all
+  scheduled from `flagProduct`.
 - `scripts/seed.ts` — one-time local CSV → Convex loader.
 - `app/page.tsx` — Voice Agent view. `app/add/page.tsx` — Manual Add.
   `app/dashboard/page.tsx` — Live Dashboard.

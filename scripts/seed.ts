@@ -6,12 +6,14 @@
 // Usage:
 //   npx convex dev            (first, so NEXT_PUBLIC_CONVEX_URL exists)
 //   npm run seed
-import "dotenv/config";
+import { config } from "dotenv";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { ConvexHttpClient } from "convex/browser";
 import { anyApi } from "convex/server";
 import { parseRecallCsv } from "../convex/lib/parseRecalls";
+
+config({ path: resolve(__dirname, "../.env.local") });
 
 const CSV_PATH = resolve(__dirname, "../data/recalls_seed.csv");
 const BATCH_SIZE = 50;

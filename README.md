@@ -54,6 +54,10 @@ their API key isn't set, so the rest of the app keeps working without them.
 Create a Conversational AI agent at [elevenlabs.io](https://elevenlabs.io/app/conversational-ai),
 then in its config:
 
+**First message** (paste as-is):
+
+> Hi! I'm your Recall Radar assistant. Give me a product name and I'll check it for an active safety recall.
+
 **System prompt** (paste as-is, adjust tone if you like):
 
 > You are the voice intake agent for Recall Radar, helping retail shop staff

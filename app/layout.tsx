@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { NavBar } from "@/components/NavBar";
+import { VoiceSessionProvider } from "@/components/VoiceSessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-zinc-50">
         <ConvexClientProvider>
-          <NavBar />
-          <main className="flex-1">{children}</main>
+          <VoiceSessionProvider>
+            <NavBar />
+            <main className="flex-1">{children}</main>
+          </VoiceSessionProvider>
         </ConvexClientProvider>
       </body>
     </html>

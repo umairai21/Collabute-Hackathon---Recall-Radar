@@ -344,7 +344,15 @@ export function VoiceSessionProvider({ children }: { children: ReactNode }) {
         addMessage("No candidate recalls found.", "system");
         setVoiceResults([]);
         lastMatchRef.current = null;
-        return "no_match";
+        // Explicit boolean rather than a bare "no_match" string — a model
+        // reading a magic string sometimes narrates a positive result
+        // anyway; a structured match_found: false field is much harder to
+        // misread. See the README system prompt: the agent is instructed
+        // to check this field before saying anything about a match.
+        return JSON.stringify({
+          match_found: false,
+          message: "No recall found for this product. Do not claim a match — call logNeedsReview instead.",
+        });
       }
 
       // Store results for display
@@ -360,11 +368,17 @@ export function VoiceSessionProvider({ children }: { children: ReactNode }) {
         brand: top.recall.brand,
         modelNumber: params.modelNumber,
       };
+      // "needs_review" is a weak/loose candidate, not an actual match — the
+      // checkmark + "Found a match" wording would overstate it the same way
+      // the old chat banner did (see app/page.tsx), so word it differently.
       addMessage(
-        `✅ Found a match: ${top.recall.productName} (${top.confidence} confidence)`,
+        top.confidence === "needs_review"
+          ? `🤔 No confident match — closest loose candidate: ${top.recall.productName} (needs review)`
+          : `✅ Found a match: ${top.recall.productName} (${top.confidence} confidence)`,
         "system"
       );
       return JSON.stringify({
+        match_found: true,
         recallId: top.recallId,
         confidence: top.confidence,
         recallNumber: top.recall.recallNumber,

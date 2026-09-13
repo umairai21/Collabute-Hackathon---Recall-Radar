@@ -152,11 +152,24 @@ export default function ChatPage() {
               {/* Show results inline */}
               {(submitted || voiceResults.length > 0) && displayResults && displayResults.length > 0 && (
                 <div className="my-4 animate-fade-in space-y-3">
-                  <div className="rounded-xl bg-green-50 px-4 py-3">
-                    <p className="text-sm font-semibold text-green-900">
-                      Found {displayResults.length} potential match{displayResults.length > 1 ? "es" : ""}
-                    </p>
-                  </div>
+                  {displayResults.some((r: any) => r.confidence !== "needs_review") ? (
+                    <div className="rounded-xl bg-green-50 px-4 py-3">
+                      <p className="text-sm font-semibold text-green-900">
+                        Found {displayResults.length} potential match
+                        {displayResults.length > 1 ? "es" : ""}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="rounded-xl bg-zinc-100 px-4 py-3">
+                      <p className="text-sm font-semibold text-zinc-700">
+                        No high-confidence match found.
+                      </p>
+                      <p className="mt-0.5 text-xs text-zinc-500">
+                        These {displayResults.length > 1 ? "are loosely related recalls" : "is a loosely related recall"} —
+                        only flag one if it genuinely matches what you're holding.
+                      </p>
+                    </div>
+                  )}
                   {displayResults.map((result: any) => (
                     <div
                       key={result.recallId}

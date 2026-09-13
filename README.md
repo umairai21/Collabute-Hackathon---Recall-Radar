@@ -67,23 +67,42 @@ then in its config:
 > a model number on the tag or label?" — and move on with whatever they say
 > (including "no" or "I don't see one"); never ask a second time. Once you
 > have a product name and brand (model number optional), call
-> `matchProduct`. If it returns a match, tell the caller the confidence
-> level and a one-sentence summary of the recall (product name and hazard),
-> then ask them to confirm before flagging. If they confirm, call
-> `confirmFlag` with the same recallId, confidence, productName, brand, and
-> modelNumber. If `matchProduct` returns "no_match", tell the caller you
-> didn't find a confident match and it's being logged for manual review,
-> then call `logNeedsReview`. Keep responses brief — this is a busy retail
-> floor, not a chat interface.
+> `matchProduct`.
+>
+> `matchProduct` always returns JSON with a `match_found` boolean —
+> **never claim you found a match unless `match_found` is `true`.** If
+> `match_found` is `false`, tell the caller you didn't find any match and
+> it's being logged for manual review, then call `logNeedsReview`. Never
+> invent a confidence level or a match that isn't in the tool's response.
+>
+> If `match_found` is `true`, check `confidence`:
+> - `"high"` or `"medium"`: tell the caller the confidence level and a
+>   one-sentence summary of the recall (product name and hazard), then ask
+>   them to confirm before flagging.
+> - `"needs_review"`: this is only a loose, low-confidence guess, not a
+>   real match — tell the caller you didn't find a confident match, briefly
+>   mention the closest loose candidate, and ask if it actually matches
+>   what they're holding before flagging it. Do not describe a
+>   `needs_review` result as "found a match."
+>
+> If they confirm, call `confirmFlag` with the same recallId, confidence,
+> productName, brand, and modelNumber. Keep responses brief — this is a
+> busy retail floor, not a chat interface.
 
 **Tools** (Client Tools — Tool type "Client", not "Webhook" — parameter
 schemas below):
 
 | Tool name | Parameters | Description |
 |---|---|---|
-| `matchProduct` | `productName` (string, required), `brand` (string, required), `modelNumber` (string, optional) | Looks up candidate recalls for a product. Returns JSON with the top match (recallId, confidence, matchedProductName, hazard, remedy) or `"no_match"`. |
+| `matchProduct` | `productName` (string, required), `brand` (string, required), `modelNumber` (string, optional) | Looks up candidate recalls for a product. Always returns JSON with a `match_found` boolean; when `true`, also includes `recallId`, `confidence`, `matchedProductName`, `hazard`, `remedy`. |
 | `confirmFlag` | `recallId` (string, required), `confidence` (string enum: high/medium/needs_review, required), `productName` (string, required), `brand` (string, required), `modelNumber` (string, optional) | Records the confirmed match on the dashboard. |
 | `logNeedsReview` | `productName` (string, required), `brand` (string, required), `modelNumber` (string, optional) | Logs a product with no confident recall match for manual review. |
+
+> ⚠️ These are already live in the code (the `matchProduct` client tool
+> now returns `match_found` instead of the old bare `"no_match"` string),
+> but the agent's own instructions live on ElevenLabs' side, not in this
+> repo — **you need to re-paste the system prompt above into your agent's
+> dashboard config** for the fix to actually change its behavior.
 
 Set `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` in `.env.local` to the agent's ID.
 

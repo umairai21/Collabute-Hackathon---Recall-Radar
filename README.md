@@ -7,7 +7,8 @@ an email alert automatically.
 
 Stack: **Convex** (backend/db/realtime), **Next.js** (frontend),
 **ElevenLabs Conversational AI** (voice agent), **Context.dev** (enrichment
-scraping only), **Resend** (email notifications).
+scraping only), **Resend** (email notifications), **Groq** (AI recall
+summaries).
 
 ## Setup
 
@@ -112,8 +113,10 @@ Set `NEXT_PUBLIC_ELEVENLABS_AGENT_ID` in `.env.local` to the agent's ID.
 npm run dev
 ```
 
-Visit `http://localhost:3000` — **Voice Agent**, **Manual Add**, and
-**Dashboard** views are in the nav bar.
+Visit `http://localhost:3000` — the nav bar has **Detect Recall** (`/`) and
+**Dashboard** (`/dashboard`). A **Manual Add** form also exists at `/add`
+for typing in a product without the chat/voice flow, but it isn't linked
+from the nav bar.
 
 ## Project structure
 
@@ -131,6 +134,16 @@ Visit `http://localhost:3000` — **Voice Agent**, **Manual Add**, and
   enrichment, Resend notification, and Groq AI-summary actions, all
   scheduled from `flagProduct`.
 - `scripts/seed.ts` — one-time local CSV → Convex loader.
-- `app/page.tsx` — Voice Agent view. `app/add/page.tsx` — Manual Add.
-  `app/dashboard/page.tsx` — Live Dashboard.
+- `components/VoiceSessionProvider.tsx` — owns the ElevenLabs conversation,
+  chat transcript, and guided text-intake flow at the layout level (not
+  page-local), so the call survives client-side navigation between pages.
+  Exposes the `matchProduct` / `confirmFlag` / `logNeedsReview` client tools
+  the voice agent calls.
+- `components/NavBar.tsx` — nav links plus the live "Listening/Speaking"
+  indicator for an in-progress voice call. `components/ConfidenceBadge.tsx`
+  — shared high/medium/needs_review badge.
+- `app/page.tsx` — **Detect Recall**: the landing hero plus a combined
+  chat/voice interface (typed guided intake or the ElevenLabs mic both feed
+  the same matching flow). `app/add/page.tsx` — **Manual Add**, a plain form
+  (not linked from the nav bar). `app/dashboard/page.tsx` — **Dashboard**.
 

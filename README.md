@@ -1,5 +1,7 @@
 # Recall Radar
 
+**Live demo:** https://collabubte-hackathon.vercel.app
+
 Voice-driven product recall detection for small retail shops. Staff talk to a
 voice agent (or use a manual form) to check whether a product is under an
 active US safety recall, see a live dashboard of flagged items, and trigger
